@@ -4,6 +4,52 @@ ReactList is a simple and stylish mobile task management app built using **React
 
 ---
 
+## 🛠️ Prerequisites
+Before running ReactList, make sure you have the following installed on your machine:
+
+### 1. Node.js & npm
+React Native projects require Node.js and npm (Node Package Manager) to manage dependencies.
+
+Check if installed:
+
+```bash
+node -v
+npm -v
+```
+If not installed: Download and install from Node.js official website.
+
+We recommend using the LTS (Long Term Support) version for better stability.
+
+### 2. Expo CLI
+Expo CLI is the command line tool to run, build, and manage Expo projects.
+
+Install globally using npm:
+
+```bash
+npm install -g expo-cli
+```
+Check if installed:
+```bash
+expo --version
+```
+
+### 3. Git
+Git is required to clone the project repository.
+
+Check if installed:
+
+```bash
+git --version
+```
+If not installed: Download and install from Git official website.
+
+### 4. Mobile Device or Emulator
+
+Mobile device: Install the Expo Go app on your Android or iOS device for easy testing.
+Emulator/Simulator:
+For Android, install Android Studio and set up an emulator.
+For iOS, use Xcode’s Simulator on macOS.
+
 ## 🚀 Getting Started
 
 This project uses [Expo](https://expo.dev), which simplifies building and testing React Native apps.
