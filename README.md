@@ -1,50 +1,82 @@
-# Welcome to your Expo app 👋
+# ✅ ReactList - React Native Task Manager
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+ReactList is a simple and stylish mobile task management app built using **React Native**, **Expo**, and **TypeScript**. The app helps you track tasks with due dates and priority levels in a clean, user-friendly interface.
 
-## Get started
+---
 
-1. Install dependencies
+## 🚀 Getting Started
 
-   ```bash
-   npm install
-   ```
+This project uses [Expo](https://expo.dev), which simplifies building and testing React Native apps.
 
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+### 1. Clone the Repository
 
 ```bash
-npm run reset-project
+git clone https://github.com/raihanzaman/reactlist.git
+cd reactlist
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### 2. Install Dependencies
 
-## Learn more
+```bash
+npm install
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+### 3. Run the App
+```bash
+npx expo start
+```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+This command will open the Expo development tools with options to run the app on:
 
-## Join the community
+- 📱 **Expo Go (Download the app and scan the QR code on your mobile device) <- Preferred Method**
+- 💻 Android Emulator
+- 🍎 iOS Simulator
+- 🛠️ Development Build
 
-Join our community of developers creating universal apps.
+## 📱 App Features
+- **Add Tasks** with:
+   - Task description
+   - Due date via native date picker
+   - Priority level (Urgent, Semi-Urgent, No Urgency)
+- **Sort Tasks** by due date (closest first)
+- Mark tasks as **completed** or **delete** them
+- **Dark mode** toggle on the Options tab
+- Clean, user-friendly UI with smooth modal interactions
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## 🗂️ Project Structure
+
+```bash
+app/
+├── (tabs)/
+│   ├── _layout.tsx         # Layout for tab navigation
+│   ├── index.tsx           # Main tasks tab (task list and add task)
+│   ├── options.tsx         # Options tab (theme toggle)
+├── components/
+│   ├── AddTask.tsx         # Component for adding new tasks (modal with inputs)
+│   ├── TaskItem.tsx        # Component displaying a single task item
+│   ├── TaskList.tsx        # Component displaying list of tasks (sorted)
+├── theme/
+│   ├── ThemeContext.tsx    # Theme context provider & hook for light/dark mode
+├── types/
+│   └── index.ts            # TypeScript types/interfaces (e.g., Task)
+└── _layout.tsx             # Root layout file for the app
+```
+
+## 🎯 How to Use
+1. Use the "+" floating action button to open the "Add Task" modal.
+2. Enter a description, select a due date, and pick a priority.
+3. Tasks automatically sort by nearest due date.
+4. Tap the task bubble to mark complete/incomplete.
+5. Delete tasks with the trash icon.
+
+## 🛠️ Development Notes
+- **State Management:** 
+Tasks are managed locally within React component state — no external storage or libraries required.
+- **Date Handling:**
+Due dates are stored as JavaScript Date objects and displayed via native date pickers (@react-native-community/datetimepicker).
+- **Theming:**
+Theme context wraps the app, controlling colors dynamically based on light/dark mode selection.
+- **Styling:**
+Stylesheets dynamically switch colors based on current theme for backgrounds, text, inputs, buttons, etc.
+
+Thank you for reviewing this project. Looking forward to hearing your thoughts!
