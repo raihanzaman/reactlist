@@ -3,20 +3,22 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useTheme } from '../theme/ThemeContext';
 
 const Options = () => {
-  const { theme, toggleTheme } = useTheme();
+  const { theme, toggleTheme } = useTheme(); // Access current theme and function to toggle it
 
-  const isDark = theme === 'dark';
-  const backgroundColor = isDark ? '#2e2e2e' : '#fff';
-  const textColor = isDark ? '#eee' : '#111';
+  const isDark = theme === 'dark'; // Boolean for convenience
+  const backgroundColor = isDark ? '#2e2e2e' : '#fff'; // Background color based on theme
+  const textColor = isDark ? '#eee' : '#111'; // Text color based on theme
 
   return (
     <View style={[styles.container, { backgroundColor }]}>
+      {/* Screen title */}
       <Text style={[styles.title, { color: textColor }]}>Theme Settings</Text>
 
+      {/* Button to toggle between light and dark mode */}
       <TouchableOpacity
         onPress={toggleTheme}
-        style={[styles.button, { backgroundColor: isDark ? '#555' : '#007AFF' }]}
-        accessibilityLabel="Toggle light/dark mode"
+        style={[styles.button, { backgroundColor: isDark ? '#555' : '#007AFF' }]} // Button color changes by theme
+        accessibilityLabel="Toggle light/dark mode" // Accessibility label for screen readers
       >
         <Text style={[styles.buttonText]}>
           Switch to {isDark ? 'Light' : 'Dark'} Mode
@@ -30,10 +32,10 @@ export default Options;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
+    flex: 1, // Fill the screen
+    justifyContent: 'center', // Center vertically
+    alignItems: 'center', // Center horizontally
+    padding: 20, // Padding around content
   },
   title: {
     fontSize: 24,

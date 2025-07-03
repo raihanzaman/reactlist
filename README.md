@@ -64,10 +64,12 @@ app/
 
 ## 🎯 How to Use
 1. Use the "+" floating action button to open the "Add Task" modal.
-2. Enter a description, select a due date, and pick a priority.
-3. Tasks automatically sort by nearest due date.
-4. Tap the task bubble to mark complete/incomplete.
-5. Delete tasks with the trash icon.
+2. Enter a task
+3. Select a due date (click date and scroll, tap on the date again to hide the scroll)
+4. Pick a priority.
+5. Tasks automatically sort by nearest due date.
+6. Tap the task bubble to mark complete/incomplete.
+7. Delete tasks with the trash icon.
 
 ## 🛠️ Development Notes
 - **State Management:** 

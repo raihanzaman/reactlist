@@ -14,36 +14,64 @@ import {
 import Modal from 'react-native-modal';
 import { useTheme } from '../theme/ThemeContext';
 
+// Props interface: expects a callback to handle adding a new task with description, due date, and priority
 interface AddTaskProps {
   onAddTask: (description: string, dueDate: Date, priority: 'low' | 'medium' | 'high') => void;
 }
 
 const AddTask: React.FC<AddTaskProps> = ({ onAddTask }) => {
-  const { theme } = useTheme();
-  const isDark = theme === 'dark';
+  const { theme } = useTheme(); // Get current app theme from context
+  const isDark = theme === 'dark'; // Boolean flag for dark mode styling
 
+  // Modal visibility state: controls whether the Add Task modal is shown
   const [modalVisible, setModalVisible] = useState(false);
+
+  // Task description input state
   const [task, setTask] = useState('');
+
+  // Due date state, default to current date/time
   const [dueDate, setDueDate] = useState<Date>(new Date());
+
+  // Controls visibility of the date picker widget
   const [showDatePicker, setShowDatePicker] = useState(false);
+
+  // Task priority state, default to 'low'
   const [priority, setPriority] = useState<'low' | 'medium' | 'high'>('low');
+
+  // Controls visibility of the priority options picker
   const [showPriorityPicker, setShowPriorityPicker] = useState(false);
+
+  // Reference to the TextInput to programmatically focus it
   const taskInputRef = useRef<TextInput>(null);
 
+  /**
+   * Handles adding the new task.
+   * Validates the task description is non-empty,
+   * then calls the onAddTask callback prop.
+   * Resets form fields and focuses input after adding.
+   */
   const handleAdd = () => {
     if (task.trim()) {
       onAddTask(task, dueDate, priority);
+      // Reset form fields to default values
       setTask('');
       setDueDate(new Date());
       setPriority('low');
       setShowPriorityPicker(false);
+      // Refocus the task input for convenience
       taskInputRef.current?.focus();
     }
   };
 
+  /**
+   * Effect hook to manage modal open behavior:
+   * - Hide date picker on modal open.
+   * - Automatically focus the task input when modal opens.
+   */
   useEffect(() => {
     if (modalVisible) {
       setShowDatePicker(false);
+      // Use requestAnimationFrame for smooth focusing after modal animation
       const showKeyboard = requestAnimationFrame(() => {
         taskInputRef.current?.focus();
       });
@@ -51,42 +79,55 @@ const AddTask: React.FC<AddTaskProps> = ({ onAddTask }) => {
     }
   }, [modalVisible]);
 
-
+  /**
+   * Closes the modal gracefully by:
+   * - Dismissing the keyboard immediately.
+   * - Delaying modal close to allow keyboard dismissal animation.
+   */
   const closeModal = () => {
     Keyboard.dismiss();
     setTimeout(() => setModalVisible(false), 150);
   };
 
+  /**
+   * Utility to get color based on priority level.
+   * Used for styling priority button and options.
+   */
   const getPriorityColor = (level: 'low' | 'medium' | 'high') => {
     switch (level) {
-      case 'high': return '#ff4d4f';
-      case 'medium': return '#ffc107';
-      default: return '#ccc';
+      case 'high': return '#ff4d4f'; // Red for urgent
+      case 'medium': return '#ffc107'; // Amber for semi-urgent
+      default: return '#ccc'; // Grey for low/no urgency
     }
   };
 
   return (
     <>
+      {/* Floating Action Button to open Add Task modal */}
       <TouchableOpacity style={styles.fab} onPress={() => setModalVisible(true)}>
         <Text style={styles.fabIcon}>＋</Text>
       </TouchableOpacity>
 
+      {/* Modal containing the Add Task form */}
       <Modal
         isVisible={modalVisible}
-        onBackdropPress={closeModal}
-        onBackButtonPress={closeModal}
+        onBackdropPress={closeModal} // Close on outside tap
+        onBackButtonPress={closeModal} // Close on Android back button
         useNativeDriver
         hideModalContentWhileAnimating
-        avoidKeyboard
+        avoidKeyboard // Automatically adjust to keyboard
         style={styles.bottomModal}
       >
+        {/* KeyboardAvoidingView adjusts the modal content position on iOS when keyboard is shown */}
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}
           style={styles.modalContainer}
         >
+          {/* TouchableWithoutFeedback allows dismissing keyboard when tapping outside input */}
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={[styles.modalContent, isDark ? styles.darkModal : styles.lightModal]}>
-              {/* Task input */}
+              
+              {/* Task description input */}
               <TextInput
                 ref={taskInputRef}
                 style={[styles.input, isDark ? styles.inputDark : styles.inputLight]}
@@ -96,39 +137,44 @@ const AddTask: React.FC<AddTaskProps> = ({ onAddTask }) => {
                 onChangeText={setTask}
               />
 
-              {/* Date input */}
+              {/* Due Date selection row */}
               <View style={styles.dateRow}>
                 <Text style={[styles.labelText, { color: isDark ? '#fff' : '#000' }]}>Due Date:</Text>
                 
+                {/* Touchable to toggle DatePicker visibility */}
                 <TouchableOpacity
                   onPress={() => setShowDatePicker(prev => !prev)}
                   style={[styles.input, isDark ? styles.inputDark : styles.inputLight, { flex: 1 }]}
                 >
+                  {/* Display selected due date in locale format */}
                   <Text style={{ color: isDark ? '#fff' : '#000' }}>
                     {dueDate.toLocaleDateString()}
                   </Text>
                 </TouchableOpacity>
               </View>
 
+              {/* DateTimePicker component rendered conditionally */}
               {showDatePicker && (
                 <DateTimePicker
                   value={dueDate}
                   mode="date"
                   display={Platform.OS === 'ios' ? 'spinner' : 'default'}
                   onChange={(event, selectedDate) => {
-                    setShowDatePicker(Platform.OS === 'ios'); // hide unless on iOS spinner
+                    // On iOS keep picker open, on others close after selection
+                    setShowDatePicker(Platform.OS === 'ios');
                     if (selectedDate) setDueDate(selectedDate);
                   }}
                   themeVariant={isDark ? 'dark' : 'light'}
                 />
               )}
 
-              {/* Priority Button */}
+              {/* Priority selection button */}
               <View>
                 <TouchableOpacity
                   onPress={() => setShowPriorityPicker(!showPriorityPicker)}
                   style={[styles.priorityButton, { borderColor: getPriorityColor(priority) }]}
                 >
+                  {/* Text changes depending on selected priority */}
                   <Text style={{ color: getPriorityColor(priority) }}>
                     {priority === 'high'
                       ? 'Urgent'
@@ -138,15 +184,18 @@ const AddTask: React.FC<AddTaskProps> = ({ onAddTask }) => {
                   </Text>
                 </TouchableOpacity>
 
-                {/* Priority Options */}
+                {/* Priority options dropdown, visible on toggle */}
                 {showPriorityPicker && (
                   <View style={styles.priorityOptions}>
+                    {/* Select 'Urgent' priority */}
                     <TouchableOpacity onPress={() => { setPriority('high'); setShowPriorityPicker(false); }}>
                       <Text style={[styles.priorityOption, { color: '#ff4d4f' }]}>Urgent</Text>
                     </TouchableOpacity>
+                    {/* Select 'Semi-Urgent' priority */}
                     <TouchableOpacity onPress={() => { setPriority('medium'); setShowPriorityPicker(false); }}>
                       <Text style={[styles.priorityOption, { color: '#ffc107' }]}>Semi-Urgent</Text>
                     </TouchableOpacity>
+                    {/* Select 'No Urgency' priority */}
                     <TouchableOpacity onPress={() => { setPriority('low'); setShowPriorityPicker(false); }}>
                       <Text style={[styles.priorityOption, { color: '#999' }]}>No Urgency</Text>
                     </TouchableOpacity>
@@ -154,7 +203,7 @@ const AddTask: React.FC<AddTaskProps> = ({ onAddTask }) => {
                 )}
               </View>
 
-              {/* Add Button */}
+              {/* Submit button to add the task */}
               <TouchableOpacity style={styles.submitButton} onPress={handleAdd}>
                 <Text style={styles.submitButtonText}>Add Task</Text>
               </TouchableOpacity>
@@ -166,6 +215,7 @@ const AddTask: React.FC<AddTaskProps> = ({ onAddTask }) => {
   );
 };
 
+// Stylesheet for the AddTask component
 const styles = StyleSheet.create({
   fab: {
     position: 'absolute',
@@ -186,7 +236,7 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   bottomModal: {
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-end', // Align modal to bottom of screen
     margin: 0,
   },
   modalContainer: {
